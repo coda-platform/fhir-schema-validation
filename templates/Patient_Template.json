@@ -1,0 +1,8 @@
+{
+  "meta": {"profile": ["https://custom-profiles/patient"]},
+  "resourceType": "Patient",
+  "id": "pat1",
+  "gender": "male",
+  "birthDate": "1964-02",
+  "deceasedDateTime": "2018-02-01T17:23:07"
+}

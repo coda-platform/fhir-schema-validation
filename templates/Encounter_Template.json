@@ -1,0 +1,32 @@
+{
+  "meta": {"profile": ["https://custom-profiles/encounter"]},
+  "resourceType": "Encounter",
+  "id": "some-encounter-id",
+  "status": "finished",
+  "class": {
+    "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+    "code": "IMP",
+    "display": "inpatient encounter"
+  },
+  "subject": {
+    "reference": "Patient/24235135"
+  },
+  "location": [
+    {
+      "location": {
+        "reference": "Location/1",
+        "display": "Emergency"
+      },
+      "status": "completed",
+      "period": {
+        "start": "2017-02-01T17:23:07Z",
+        "end": "2017-03-01T02:45:07Z"
+      }
+    }
+  ],
+
+  "period": {
+    "start": "2017-02-01T17:23:07Z",
+    "end": "2017-03-01T17:23:07Z"
+  }
+}
