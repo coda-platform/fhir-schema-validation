@@ -1,0 +1,76 @@
+// Location resource profile built with FHIR schema
+
+{
+  "base": "hl7.fhir.r4.core#4.0.1/Location",
+  "fqn": "custom-profiles#1.0.0/location",
+  "url": "https://custom-profiles/location",
+  "required": ["id", "identifier", "status", "physicalType", "type"],
+  // "partOf" should reference a Location-Ward resource, if this is a Location-bed resrouce
+  "constraints": {
+                  "loc_ref": {
+                              "expression": "iif(physicalType.coding.code.where($this = 'bd'), partOf.exists()))",
+                              "severity": "error",
+                              "human": "Location reference must exist."
+                              }
+                  },
+  "elements": {
+                "id": {
+                        "type": "hl7.fhir.r4.core#4.0.1/id",
+                        "constraints": {
+                                        "id_regex": {
+                                                      "expression": "$this.matches('^[0-9a-zA-Z-.]{1,64}$')",
+                                                      "severity": "error",
+                                                      "human": "Id should be a combination of upper- or lower-case ASCII letters, numerals, '-' and '.', with a length limit of 64 characters."
+                                                      }
+                                        }
+                        },
+                "partOf": {
+                            "refers": ["hl7.fhir.r4.core#4.0.1/Location"]
+                            },
+                "identifier": {
+                                "type": "hl7.fhir.r4.core#4.0.1/Identifier",
+                                "array": true,
+                                "min": 1,  // This doesn't function properly
+                                "required": ["value"]
+                                },
+                "physicalType": {
+                                  "required": ["coding"],
+                                  "binding": {
+                                              "valueSet": "http://hl7.org/fhir/ValueSet/location-physical-type",
+                                              "codesystems": ["http://terminology.hl7.org/CodeSystem/location-physical-type"],
+                                              "strength": "required"
+                                              },
+                                  "elements": {
+                                              "coding": {
+                                                        "type": "custom-profiles#1.0.0/coding",
+                                                        "array": true
+                                                        }
+                                              }
+                                  },
+                "type": {
+                          "required": ["coding"],
+                          "binding": {
+                                      "valueSet": "http://terminology.hl7.org/ValueSet/v3-ServiceDeliveryLocationRoleType",
+                                      "codesystems": ["http://terminology.hl7.org/CodeSystem/v3-RoleCode"],
+                                      "strength": "required"
+                                      },
+                          "array": true,
+                          "elements": {
+                                      "coding": {
+                                                  "type": "custom-profiles#1.0.0/coding",
+                                                  "array": true,
+                                                  "elements": {
+                                                                "code": {
+                                                                          "constraints": {
+                                                                                          "loc_type": {
+                                                                                                        "severity": "error",
+                                                                                                        "expression": "%context.subsetOf('ER' | 'HU' | 'ICU')"
+                                                                                                        }
+                                                                                          }
+                                                                          }
+                                                              }
+                                                    }
+                                     }
+                          }
+            }
+}

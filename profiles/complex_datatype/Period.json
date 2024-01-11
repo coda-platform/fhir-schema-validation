@@ -1,0 +1,12 @@
+// Period profile built with FHIR schema
+
+{
+  "base": "hl7.fhir.r4.core#4.0.1/Period",
+  "fqn": "custom-profiles#1.0.0/period",
+  "url": "https://custom-profiles/period",
+  "required": ["start", "end"],
+  "elements": {
+              "start": {"type": "hl7.fhir.r4.core#4.0.1/dateTime"},
+              "end": {"type": "hl7.fhir.r4.core#4.0.1/dateTime"}
+              }
+}

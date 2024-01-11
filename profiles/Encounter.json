@@ -1,0 +1,67 @@
+// Encounter resource profile built with FHIR schema
+
+{
+  "base": "hl7.fhir.r4.core#4.0.1/Encounter",
+  "fqn": "custom-profiles#1.0.0/encounter",
+  "url": "https://custom-profiles/encounter",
+  "required": ["id", "status", "class", "subject", "location", "period"],
+  "elements": {
+                "id": {
+                        "type": "hl7.fhir.r4.core#4.0.1/id",
+                        "constraints": {
+                                        "id_regex": {
+                                                      "expression": "$this.matches('^[0-9a-zA-Z-.]{1,64}$')",
+                                                      "severity": "error",
+                                                      "human": "Id should be a combination of upper- or lower-case ASCII letters, numerals, '-' and '.', with a length limit of 64 characters."
+                                                      }
+                                        }
+                        },
+                "class": {
+                          "type": "custom-profiles#1.0.0/coding",
+                          "binding": {
+                                      "valueSet": "http://terminology.hl7.org/ValueSet/v3-ActEncounterCode",
+                                      "codesystems": ["http://terminology.hl7.org/CodeSystem/v3-ActCode"],
+                                      "strength": "required"
+                                      },
+                          "elements": {
+                                      "code": {
+                                                "constraints": {
+                                                                "class_code": {
+                                                                              "severity": "error",
+                                                                              "expression": "%context.subsetOf('IMP' | 'EMER')",
+                                                                              "human": "The type of encounter must be IMP (impatient) or EMER (emergency)."
+                                                                              }
+                                                                }
+                                                }
+                                      }
+                          },  // Terminology binding error, when using "type": "custom-profiles#1.0.0/coding"
+                "subject": {
+                            "refers": ["hl7.fhir.r4.core#4.0.1/Patient"]
+                            },
+                "location": {
+                              "required": ["location", "status", "period"],
+                              "elements": {
+                                            "location": {
+                                                        "required": ["reference", "display"],
+                                                        "elements": {
+                                                                      "reference": {"refers": ["hl7.fhir.r4.core#4.0.1/Location"]}
+                                                                      }
+                                                          },
+                                            "status": {
+                                                        "binding": {
+                                                                    "valueSet": "http://hl7.org/fhir/ValueSet/encounter-location-status",
+                                                                    "codesystems": ["http://hl7.org/fhir/encounter-location-status"],
+                                                                    "strength": "required"
+                                                                    }
+                                                        },
+                                            "period": {
+                                                        "type": "custom-profiles#1.0.0/period"
+                                                      }
+                                            }
+
+                              },
+                  "period": {
+                              "type": "custom-profiles#1.0.0/period"
+                            }
+            }
+}

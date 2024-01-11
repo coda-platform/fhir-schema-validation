@@ -1,0 +1,8 @@
+// Coding profile built with FHIR schema
+
+{
+  "base": "hl7.fhir.r4.core#4.0.1/Coding",
+  "fqn": "custom-profiles#1.0.0/coding",
+  "url": "https://custom-profiles/coding",
+  "required": ["system", "code", "display"]
+}

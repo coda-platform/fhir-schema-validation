@@ -1,0 +1,52 @@
+// Condition resource profile built with FHIR schema
+
+{
+  "base": "hl7.fhir.r4.core#4.0.1/Condition",
+  "fqn": "custom-profiles#1.0.0/condition",
+  "url": "https://custom-profiles/condition",
+  "required": ["id", "subject", "onsetDateTime", "code"],
+  "elements": {
+                "id": {
+                        "type": "hl7.fhir.r4.core#4.0.1/id",
+                        "constraints": {
+                                        "id_regex": {
+                                                      "expression": "$this.matches('^[0-9a-zA-Z-.]{1,64}$')",
+                                                      "severity": "error",
+                                                      "human": "Id should be a combination of upper- or lower-case ASCII letters, numerals, '-' and '.', with a length limit of 64 characters."
+                                                      }
+                                        }
+                        },
+                "subject": {
+                            "refers": ["hl7.fhir.r4.core#4.0.1/Patient"]
+                            },
+                "encounter": {
+                              "refers": ["hl7.fhir.r4.core#4.0.1/Encounter"]
+                              },
+                "onset": {"choices": ["onsetDateTime"]},
+                "onsetDateTime": {
+                                  "choiceOf": "onset",
+                                  "type": "datetime",
+                                  "constraints": {
+                                                  "onsetdatetime_regex": {
+                                                                          "expression": "toString($this).matches('^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)(.[0-9]+)?(Z|(+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$')",
+                                                                          "severity": "error",
+                                                                          "human": "onsetDateTime should follow datetime format."
+                                                                          }
+                                                  }
+                                  },  //datetime can't be validated
+                "code": {
+                          "type": "custom-profiles#1.0.0/codeableconcept",
+                          "binding": {
+                                      "valueSet": "http://hl7.org/fhir/ValueSet/icd-10",
+                                      "codesystems": ["http://hl7.org/fhir/sid/icd-10"],
+                                      "strength": "required"
+                                      },
+                          "elements": {
+                                        "coding": {
+                                                    "type": "custom-profiles#1.0.0/coding",
+                                                    "array": true
+                                                    }
+                                        }
+                        }
+            }
+}

@@ -1,0 +1,96 @@
+// Obersation quantity resource profile built with FHIR schema
+
+{
+  "base": "hl7.fhir.r4.core#4.0.1/Observation",
+  "fqn": "custom-profiles#1.0.0/observation-quantity",
+  "url": "https://custom-profiles/observation-quantity",
+  "required": ["id", "identifier", "status", "category", "effectiveDateTime", "issued", "subject", "code", "valueQuantity", "interpretation", "referenceRange", "note"],
+  "elements": {
+                "id": {
+                        "type": "hl7.fhir.r4.core#4.0.1/id",
+                        "constraints": {
+                                        "id_regex": {
+                                                      "expression": "$this.matches('^[0-9a-zA-Z-.]{1,64}$')",
+                                                      "severity": "error",
+                                                      "human": "Id should be a combination of upper- or lower-case ASCII letters, numerals, '-' and '.', with a length limit of 64 characters."
+                                                      }
+                                        }
+                        },
+                "identifier": {
+                                "type": "hl7.fhir.r4.core#4.0.1/Identifier",
+                                "array": true,
+                                "min": 1,  // This doesn't function properly
+                                "required": ["value"]
+                                },
+                "category": {
+                              "required": ["coding"],
+                              "binding": {
+                                          "valueSet": "http://hl7.org/fhir/ValueSet/observation-category",
+                                          "codesystems": ["http://terminology.hl7.org/CodeSystem/observation-category"],
+                                          "strength": "required"
+                                          },
+                              "array": true,
+                              "elements": {
+                                            "coding": {
+                                                        "type": "custom-profiles#1.0.0/coding",
+                                                        "array": true
+                                                      }
+                                            }
+
+                              },
+                "effective": {"choices": ["effectiveDateTime"]},
+                "effectiveDateTime": {
+                                      "choiceOf": "effective",
+                                      "type": "hl7.fhir.r4.core#4.0.1/dateTime"
+                                      },  // Cannot be validated
+                "issued": {"type": "hl7.fhir.r4.core#4.0.1/dateTime"},  // Cannot be validated
+                "subject": {
+                            "refers": ["hl7.fhir.r4.core#4.0.1/Patient"]
+                            },
+                "encounter": {
+                              "refers": ["hl7.fhir.r4.core#4.0.1/Encounter"]
+                              },
+                "code": {
+                          "type": "custom-profiles#1.0.0/codeableconcept",
+                          "binding": {
+                                      "valueSet": "http://hl7.org/fhir/ValueSet/observation-codes",
+                                      "codesystems": ["http://loinc.org"],
+                                      "strength": "required"
+                                      },  // It seems certain codes are not implemented
+                          "elements": {
+                                        "coding": {
+                                                    "type": "custom-profiles#1.0.0/coding",
+                                                    "array": true
+                                                    }
+                                        }
+                          },  // Terminology binding error
+                "value": {"choices": ["valueQuantity"]},
+                "valueQuantity": {
+                                  "choiceOf": "value",
+                                  "required": ["value", "unit"]
+                                  },
+                "interpretation": {
+                                    "type": "custom-profiles#1.0.0/codeableconcept",
+                                    "binding": {
+                                                "valueSet": "http://hl7.org/fhir/ValueSet/observation-interpretation",
+                                                "codesystems": ["http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation"],
+                                                "strength": "required"
+                                                },
+                                    "array": true,
+                                    "elements": {
+                                                  "coding": {
+                                                              "type": "custom-profiles#1.0.0/coding",
+                                                              "array": true
+                                                            }
+                                                  }
+                                      },  // Terminology binding error
+                "referenceRange": {
+                                    "required": ["text"],
+                                    "array": true
+                                    },
+                "note": {
+                          "required": ["text"],
+                          "array": true
+                        }
+              }
+}

@@ -1,0 +1,8 @@
+// CodeableConcept profile built with FHIR schema
+
+{
+  "base": "hl7.fhir.r4.core#4.0.1/CodeableConcept",
+  "fqn": "custom-profiles#1.0.0/codeableconcept",
+  "url": "https://custom-profiles/codeableconcept",
+  "required": ["coding", "text"]
+}
